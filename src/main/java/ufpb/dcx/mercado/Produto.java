@@ -1,10 +1,11 @@
 package ufpb.dcx.mercado;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Produto {
+public class Produto implements Serializable {
 
 
     private String nome;
@@ -68,6 +69,6 @@ public class Produto {
 
     @Override
     public String toString() {
-        return "Nome: "+nome+"Tipo: "+tipo+"Preco: "+preco+"Quantidade: "+quantidade;
+        return "Nome: "+nome+" \nTipo: "+tipo+" \nPreco: "+preco+" \nQuantidade: "+quantidade;
     }
 }

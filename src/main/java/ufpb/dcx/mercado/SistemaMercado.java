@@ -1,12 +1,20 @@
 package ufpb.dcx.mercado;
-
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.*;
 
 public class SistemaMercado implements MercadoInterface{
-    private Map<String,Produto> produtos;
+    private HashMap<String,Produto> produtos;
+    private GravadorDeDados gravador;
 
     public SistemaMercado() {
-        produtos = new HashMap<String,Produto>();
+        try {
+          gravador = new GravadorDeDados();
+          this.produtos =  gravador.lerProdutos();
+        }catch(IOException e){
+            this.produtos = new HashMap<String,Produto>();
+            System.err.println(e.getMessage());
+        }
     }
 
     @Override
@@ -43,6 +51,9 @@ public class SistemaMercado implements MercadoInterface{
         produtos.get(id).lote.get(lote);
         throw new LoteNaoEncontradoException("Lote não encontrado");
     }
+    public Produto BuscarPorCodigo(String codigo) {
+        return produtos.get(codigo);
+    }
 
     @Override
     public Collection<Lote> BuscarPorDataDeValidade(String dataDeValidade) throws LoteNaoEncontradoException {
@@ -69,5 +80,8 @@ public class SistemaMercado implements MercadoInterface{
     }
     public void alterarTipo(String tipo, int id) {
         produtos.get(id).setTipo(tipo);
+    }
+    public void salvarDados() throws IOException {
+        gravador.salvarProdutos(this.produtos);
     }
 }

@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.Collection;
 
 public class InterfaceMercado extends JFrame {
@@ -18,7 +19,7 @@ public class InterfaceMercado extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(null);
 
-        ImageIcon imageIcon = new ImageIcon("C:\\Users\\migue\\IdeaProjects\\MercadinhoUFPB\\src\\main\\java\\Miguel\\ufpb\\mercado\\logo.png");
+        ImageIcon imageIcon = new ImageIcon("C:\\Users\\migue\\IdeaProjects\\ProjetoPOO2024\\src\\main\\java\\ufpb\\dcx\\mercado\\logo.png");
         Image image = imageIcon.getImage(); // Converte para o tipo Image
         Image scaledImage = image.getScaledInstance(200, 200, Image.SCALE_SMOOTH); // Redimensiona para 200x200 pixels
         imageIcon = new ImageIcon(scaledImage); // Converte de volta para ImageIcon
@@ -46,6 +47,11 @@ public class InterfaceMercado extends JFrame {
         adicionarButton.setBounds(300, 290, 150, 30);
         add(adicionarButton);
 
+        JButton buscaPorCodigoButton = new JButton("Buscar por Código");
+        buscaPorCodigoButton.setBounds(300, 330, 150, 30);
+        add(buscaPorCodigoButton);
+
+
 
         listarButton.addActionListener(new ActionListener() {
             @Override
@@ -57,7 +63,11 @@ public class InterfaceMercado extends JFrame {
         cadastrarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                cadastrarProduto();
+                try {
+                    cadastrarProduto();
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
         });
 
@@ -70,8 +80,12 @@ public class InterfaceMercado extends JFrame {
         adicionarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                removerProduto();
+                adicionarUnidades();
             }
+        });
+        buscaPorCodigoButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) { buscaPorCodigo();}
         });
     }
 
@@ -85,14 +99,14 @@ public class InterfaceMercado extends JFrame {
         JOptionPane.showMessageDialog(this, produtoList.toString(), "Produtos", JOptionPane.INFORMATION_MESSAGE);
     }
 
-    private void cadastrarProduto() {
+    private void cadastrarProduto() throws IOException {
         String nome = JOptionPane.showInputDialog(this, "Digite o nome do produto:");
         String tipo = JOptionPane.showInputDialog(this, "Digite o tipo do produto:");
         String codigoDeBarras = JOptionPane.showInputDialog(this, "Digite o código de barras:");
         double preco = Double.parseDouble(JOptionPane.showInputDialog(this, "Digite o preço:"));
         Produto produto = new Produto(nome, tipo, codigoDeBarras, preco);
         boolean cadastrado = sistema.cadastrarProduto(produto);
-
+        sistema.salvarDados();
         if(cadastrado) JOptionPane.showMessageDialog(this, "Produto cadastrado com sucesso!", "Cadastro", JOptionPane.INFORMATION_MESSAGE);
     }
 
@@ -112,6 +126,27 @@ public class InterfaceMercado extends JFrame {
 
         if(cadastrado) JOptionPane.showMessageDialog(this, "Produto cadastrado com sucesso!", "Cadastro", JOptionPane.INFORMATION_MESSAGE);
     }
+
+    private void buscaPorCodigo(){
+        //String caminhoImagem = "C:\\Users\\migue\\IdeaProjects\\ProjetoPOO2024\\src\\main\\java\\ufpb\\dcx\\mercado\\WhatsApp Image 2024-10-11 at 23.16.40.jpeg";
+
+        // Capturar a imagem da câmera
+        //String imagemCapturada = CapturarImagem.capturarImagemDaCamera(caminhoImagem);
+
+        // Ler o código de barras da imagem capturada
+        //if (imagemCapturada != null) {
+            String codigoDeBarras = LeitorCodigoDeBarras.lerCodigoDeBarras("C:\\Users\\migue\\IdeaProjects\\ProjetoPOO2024\\src\\main\\java\\ufpb\\dcx\\mercado\\WhatsApp Image 2024-10-11 at 23.16.40.jpeg");
+            if (codigoDeBarras != null) {
+                System.out.println("Código de barras lido: " + codigoDeBarras);
+                JOptionPane.showMessageDialog(this,sistema.BuscarPorCodigo(codigoDeBarras).toString(), "Produto", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                System.out.println("Nenhum código de barras encontrado.");
+            }
+      //  }
+    }
+
+
+
         public static void main (String[]args){
             SwingUtilities.invokeLater(new Runnable() {
                 @Override
