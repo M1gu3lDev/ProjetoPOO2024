@@ -61,13 +61,25 @@ public class SistemaMercado implements MercadoInterface{
     public void alterarPreco(String id, int preco) {
         produtos.get(id).setPreco(preco);
     }
-    public void alterarNome(String nome, int id) {
-        produtos.get(id).setNome(nome);
+
+    public void alterarNome(String codigoDeBarras,String nome) {
+        Produto produto = produtos.get(codigoDeBarras);
+        if (produto != null) {
+            produto.setNome(nome);
+        }
     }
-    public void alterarCodigoDeBarras(String codigoDeBarras, int id) {
-        produtos.get(id).setCodigoDeBarras(codigoDeBarras);
+    public void alterarCodigoDeBarras(String codigoAtual, String novoCodigoDeBarras) {
+        Produto produto = produtos.get(codigoAtual);
+        if (produto != null) {
+            produto.setCodigoDeBarras(novoCodigoDeBarras);
+            produtos.remove(codigoAtual); // Remove o produto do antigo código de barras
+            produtos.put(novoCodigoDeBarras, produto); // Adiciona com o novo código de barras
+        }
     }
-    public void alterarTipo(String tipo, int id) {
-        produtos.get(id).setTipo(tipo);
+    public void alterarTipo(String codigoDeBarras, String tipo) {
+        Produto produto = produtos.get(codigoDeBarras);
+        if (produto != null) {
+            produto.setTipo(tipo);
+        }
     }
 }
