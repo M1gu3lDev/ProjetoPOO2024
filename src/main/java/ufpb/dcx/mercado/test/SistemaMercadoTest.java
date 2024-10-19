@@ -18,6 +18,10 @@ public class SistemaMercadoTest {
     private Lote lote;
 
     @Before
+    /*
+    * Inicializando o objeto SistemaMercado
+    * Craindo instâncias de Produto e Lote
+    **/
     public void setUp() {
         sistema = new SistemaMercado();
         produto = new Produto("Arroz", "Alimento", "001", 5.50);
