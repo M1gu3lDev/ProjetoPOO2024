@@ -43,13 +43,21 @@ public class InterfaceMercado extends JFrame {
         removerButton.setBounds(300, 250, 150, 30);
         add(removerButton);
 
-        JButton adicionarButton = new JButton("adicionar unidade");
+        JButton adicionarButton = new JButton("Adicionar unidade");
         adicionarButton.setBounds(300, 290, 150, 30);
         add(adicionarButton);
 
+        JButton removerUnidadeButton = new JButton("Remover Unidade");
+        removerUnidadeButton.setBounds(300, 330, 150, 30);
+        add(removerUnidadeButton);
+
         JButton buscaPorCodigoButton = new JButton("Buscar por Código");
-        buscaPorCodigoButton.setBounds(300, 330, 150, 30);
+        buscaPorCodigoButton.setBounds(300, 370, 150, 30);
         add(buscaPorCodigoButton);
+
+        JButton buscaPorTipoButton = new JButton("Buscar por Tipo");
+        buscaPorTipoButton.setBounds(300, 410, 150, 30);
+        add(buscaPorTipoButton);
 
 
 
@@ -74,20 +82,46 @@ public class InterfaceMercado extends JFrame {
         removerButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                removerProduto();
+                try {
+                    removerProduto();
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
         });
         adicionarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                adicionarUnidades();
+                try {
+                    adicionarUnidades();
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
+
+        removerUnidadeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    removerUnidade();
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
         });
         buscaPorCodigoButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) { buscaPorCodigo();}
         });
+
+        buscaPorTipoButton.addActionListener(new ActionListener() {
+           @Override
+           public void actionPerformed(ActionEvent e){buscaPorTipo();}
+        });
     }
+
+
 
 
     private void listarProdutos() {
@@ -110,40 +144,47 @@ public class InterfaceMercado extends JFrame {
         if(cadastrado) JOptionPane.showMessageDialog(this, "Produto cadastrado com sucesso!", "Cadastro", JOptionPane.INFORMATION_MESSAGE);
     }
 
-    private void removerProduto() {
+    private void removerProduto() throws IOException {
         String codigoDeBarras = JOptionPane.showInputDialog(this, "Digite o código de barras do produto a ser removido:");
         boolean removido = sistema.removerProduto(codigoDeBarras);
         if (!removido && codigoDeBarras != null) JOptionPane.showMessageDialog(this, "Produto removido com sucesso!", "Remover", JOptionPane.INFORMATION_MESSAGE);
+        sistema.salvarDados();
     }
-    private void adicionarUnidades() {
-        String codigoDebarras = JOptionPane.showInputDialog(this, "Digite o codigo do produto:");
-        String lote = JOptionPane.showInputDialog(this, "Digite o tipo do lote:");
-        String DataDeValidade = JOptionPane.showInputDialog(this, "Digite a data de validade:");
-        String local = JOptionPane.showInputDialog(this, "Digite Local:");
-        int quantidade = Integer.parseInt(JOptionPane.showInputDialog(this, "Digite o quantidade:"));
-        Lote lote1 = new Lote(DataDeValidade, quantidade, lote, local, codigoDebarras);
-        boolean cadastrado = sistema.adicionarUnidade(codigoDebarras, lote1);
 
-        if(cadastrado) JOptionPane.showMessageDialog(this, "Produto cadastrado com sucesso!", "Cadastro", JOptionPane.INFORMATION_MESSAGE);
+    private void adicionarUnidades() throws IOException {
+        String codigoDebarras = JOptionPane.showInputDialog(this, "Digite o codigo do produto:");
+        int quantidade = Integer.parseInt(JOptionPane.showInputDialog(this, "Digite o quantidade:"));
+        sistema.adicionarUnidade(codigoDebarras, quantidade);
+        sistema.salvarDados();
+    }
+    private void removerUnidade() throws IOException {
+        String codigoDebarras = JOptionPane.showInputDialog(this, "Digite o codigo do produto:");
+        int quantidade = Integer.parseInt(JOptionPane.showInputDialog(this, "Digite o quantidade:"));
+        sistema.removerUnidade(codigoDebarras, quantidade);
+        sistema.salvarDados();
     }
 
     private void buscaPorCodigo(){
-        //String caminhoImagem = "C:\\Users\\migue\\IdeaProjects\\ProjetoPOO2024\\src\\main\\java\\ufpb\\dcx\\mercado\\WhatsApp Image 2024-10-11 at 23.16.40.jpeg";
 
-        // Capturar a imagem da câmera
-        //String imagemCapturada = CapturarImagem.capturarImagemDaCamera(caminhoImagem);
-
-        // Ler o código de barras da imagem capturada
-        //if (imagemCapturada != null) {
-            String codigoDeBarras = JOptionPane.showInputDialog(this, "Digite o código a ser buscado");
+            String codigoDeBarras = JOptionPane.showInputDialog(this, "Digite o codigo: ");
             if (codigoDeBarras != null) {
                 System.out.println("Código de barras lido: " + codigoDeBarras);
                 JOptionPane.showMessageDialog(this,sistema.BuscarPorCodigo(codigoDeBarras).toString(), "Produto", JOptionPane.INFORMATION_MESSAGE);
             } else {
                 System.out.println("Nenhum código de barras encontrado.");
             }
-      //  }
     }
+    private void buscaPorTipo(){
+        String tipo = JOptionPane.showInputDialog(this, "Digite o tipo: ");
+        Collection<Produto> produtos = sistema.listarProdutosPorTipo(tipo);
+        StringBuilder produtoList = new StringBuilder();
+        for (Produto produto : produtos) {
+            produtoList.append(produto.toString()).append("\n");
+        }
+        JOptionPane.showMessageDialog(this, produtoList.toString(), "Produtos", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+
 
 
 
@@ -156,3 +197,4 @@ public class InterfaceMercado extends JFrame {
             });
         }
     }
+
