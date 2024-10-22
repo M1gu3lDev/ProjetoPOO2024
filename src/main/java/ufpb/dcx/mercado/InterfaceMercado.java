@@ -135,7 +135,7 @@ public class InterfaceMercado extends JFrame {
 
         // Ler o código de barras da imagem capturada
         //if (imagemCapturada != null) {
-            String codigoDeBarras = LeitorCodigoDeBarras.lerCodigoDeBarras("C:\\Users\\migue\\IdeaProjects\\ProjetoPOO2024\\src\\main\\java\\ufpb\\dcx\\mercado\\WhatsApp Image 2024-10-11 at 23.16.40.jpeg");
+            String codigoDeBarras = JOptionPane.showInputDialog(this, "Digite o código a ser buscado");
             if (codigoDeBarras != null) {
                 System.out.println("Código de barras lido: " + codigoDeBarras);
                 JOptionPane.showMessageDialog(this,sistema.BuscarPorCodigo(codigoDeBarras).toString(), "Produto", JOptionPane.INFORMATION_MESSAGE);
