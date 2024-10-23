@@ -9,6 +9,6 @@ public interface MercadoInterface {
     public boolean removerProduto(String id);
     public void adicionarUnidade(String id, int quantidade);
     public void removerUnidade(String id, int quantidade) throws LoteNaoEncontradoException;
-    public void alterarPreco(String id, int preco);
+    public void alterarPreco(String id, double preco);
 
 }

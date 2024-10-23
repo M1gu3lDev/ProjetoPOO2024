@@ -29,9 +29,13 @@ public class SistemaMercado implements MercadoInterface{
 
     @Override
     public boolean removerProduto(String id) {
-        produtos.remove(id);
-        return produtos.containsKey(id);
+        if (produtos.containsKey(id)) {
+            produtos.remove(id);
+            return true;
+        }
+        return false;
     }
+
 
     @Override
     public void adicionarUnidade(String id, int quantidade) {
@@ -55,7 +59,7 @@ public class SistemaMercado implements MercadoInterface{
     }
 
     @Override
-    public void alterarPreco(String id, int preco) {
+    public void alterarPreco(String id, double preco) {
         produtos.get(id).setPreco(preco);
     }
 
